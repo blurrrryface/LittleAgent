@@ -1,0 +1,8 @@
+test/
+.env
+poetry.lock
+.idea/
+.vscode/
+
+
+

@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "littleagent"
+version = "0.1.0"
+description = ""
+authors = ["blurrrryface <hl852456098@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+loguru = "^0.7.2"
+langchain = "^0.1.19"
+tqdm = "^4.66.4"
+langchain-openai = "^0.1.7"
+langchain-postgres = "^0.0.6"
+psycopg2-binary = "^2.9.9"
+streamlit = "^1.34.0"
+streamlit-extras = "^0.4.2"
+websocket-client = "^1.8.0"
+numexpr = "^2.10.0"
+langchainhub = "^0.1.16"
+nbconvert = "^7.16.4"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[[tool.poetry.source]]
+name = "aliyun"
+url = "http://mirrors.aliyun.com/pypi/simple"
+default = true
