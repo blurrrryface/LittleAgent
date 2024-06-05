@@ -236,7 +236,7 @@ class ParadeDB(VectorStore):
             where t1.id in (
                 SELECT id
                 FROM knowledge_base_bm25.rank_hybrid(
-                    bm25_query => 'document_content:"{query}"',
+                    bm25_query => 'translation:{query} OR source:{query}',
                     similarity_query => '''{sql_embedding}''<-> embedding',
                     bm25_weight => {bm25_weight},
                     similarity_weight => {similarity_weight}

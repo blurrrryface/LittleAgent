@@ -1,9 +1,12 @@
 """
 OpenAI Module
 """
+from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from typing import Dict, Any
+import os
 
+load_dotenv()
 
 class OpenAI(ChatOpenAI):
     """
@@ -18,7 +21,7 @@ class OpenAI(ChatOpenAI):
 
     def __init__(self, llm_config: Dict[str, Any]):
         DEFAULT_CONFIG = {
-            "openai_api_key": "sk-DJFI6WpvxYievGbVjwidiXSyoZzvfqqiCCDsyk4BsNqz6pww",
+            "openai_api_key": os.getenv('OPENAI_API_KEY'),
             "openai_api_base": "https://api.chatanywhere.com.cn",
         }
         # Merge default config with user-provided config, giving priority to user values

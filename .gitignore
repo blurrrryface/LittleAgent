@@ -4,5 +4,4 @@ poetry.lock
 .idea/
 .vscode/
 
-
-
+data/

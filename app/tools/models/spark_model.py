@@ -1,7 +1,10 @@
 from typing import Dict, Any
 
+from dotenv import load_dotenv
 from langchain_community.llms import SparkLLM
+import os
 
+load_dotenv()
 
 class SparkModel(SparkLLM):
     def __init__(self, llm_config: Dict[str, Any]):
@@ -40,9 +43,9 @@ class SparkModel(SparkLLM):
                            "spark_llm_domain": "general"},
         }
         DEFAULT_CONFIG = {
-            "spark_app_id": "9f9d5017",
-            "spark_api_key": "6087921c15527dfd84aa19b7a2482b84",
-            "spark_api_secret": "MTA3ZDkyYmZkNjc0OTYwMWE1MDljMjZj",
+            "spark_app_id": os.getenv('SPARK_APP_ID'),
+            "spark_api_key": os.getenv('SPARK_API_KEY'),
+            "spark_api_secret": os.getenv('SPARK_API_SECRET'),
             "spark_api_url": model_url[model]["base_url"],
             "spark_llm_domain": model_url[model]["spark_llm_domain"],
 
