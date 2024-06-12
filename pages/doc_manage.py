@@ -7,29 +7,9 @@ from loguru import logger
 from app.tools.models.model_tokens import models_tokens
 from app.tools.models.select_llms import get_llms
 from app.tools.storage.pg_controller import KnowledgeBaseManager
+import re
 
 all_provider = set(models_tokens.keys())
-
-with st.sidebar:
-    st.sidebar.success("选择一个模型.")
-    provider = st.sidebar.selectbox(
-        "选择一个模型提供商",
-        all_provider,
-        # "openai" if "openai" in all_provider else list(all_provider)
-    )
-    model_name = st.sidebar.selectbox(
-        "选择一个模型",
-        models_tokens[provider],
-        # "gpt-4o-ca" if "gpt-4o-ca" in models_tokens[provider] and provider == 'openai' else list(models_tokens[provider])
-    )
-
-    llm_config = {
-        "provider": provider,
-        "model": model_name,
-        "streaming": False,
-    }
-
-    llm = get_llms(llm_config)
 
 
 def translate_node(original_text, llm):
@@ -88,4 +68,106 @@ def translate(llm):
         progress_bar.progress((i + 1) / num)
         progress_text.text(f"进度: {int((i + 1) / num * 100)}%")
 
-st.button("开始翻译", on_click=translate, args=(llm,))
+
+def _get_all_doc_title():
+    manager = KnowledgeBaseManager()
+    get_all_doc_title = """
+        SELECT "source"
+        FROM document.knowledge_base t1
+        group by "source",url
+        order by url
+        """
+    docs_title = manager.execute_query_all(get_all_doc_title)
+    return [doc.source for doc in docs_title]
+
+
+def _get_title_content(doc_title):
+    manager = KnowledgeBaseManager()
+    get_title_content = f"""
+                select links,images,string_agg(document_content,'') as en,string_agg("translation",'') as zh
+                from (
+                    SELECT links,images,id,document_content,"translation"
+                    FROM document.knowledge_base t1
+                    where "source" = '{doc_title}'
+                    group by id,links,images
+                    order by id
+                )
+                group by links,images
+                """
+    docs_content = manager.execute_query_one(get_title_content)
+    links = docs_content['links']
+    images = docs_content['images']
+    restored_english_markdown, restored_chinese_markdown = restore_images_in_markdown(
+        docs_content['en'], docs_content['zh'], images)
+    return restored_english_markdown, restored_chinese_markdown
+
+
+def restore_images_in_markdown(english_markdown, chinese_markdown, images):
+    import re
+
+    # 正则表达式匹配英文Markdown中的图片占位符
+    english_image_placeholders = re.findall(r'!\[(.*?)\]\(\)', english_markdown)
+
+    # 替换英文Markdown中的图片链接
+    restored_english_markdown = english_markdown
+    for placeholder in english_image_placeholders:
+        image_url = images.get(placeholder)
+        if image_url:
+            restored_english_markdown = restored_english_markdown.replace(f"![{placeholder}]()",
+                                                                          f"![{placeholder}]({image_url})", 1)
+
+    # 替换中文Markdown中的图片链接
+    # 假设图片的顺序与英文Markdown中的顺序相同
+    restored_chinese_markdown = chinese_markdown
+    for i, placeholder in enumerate(english_image_placeholders):
+        image_url = images.get(placeholder)
+        if image_url:
+            # 查找中文Markdown中的下一个图片占位符
+            restored_chinese_markdown = re.sub(r'!\[(.*?)\]\(\)', f'![{placeholder}]({image_url})',
+                                               restored_chinese_markdown, 1)
+
+    return restored_english_markdown, restored_chinese_markdown
+
+
+
+with st.sidebar:
+    st.sidebar.success("选择一个模型.")
+    provider = st.sidebar.selectbox(
+        "选择一个模型提供商",
+        all_provider,
+        # "openai" if "openai" in all_provider else list(all_provider)
+    )
+    model_name = st.sidebar.selectbox(
+        "选择一个模型",
+        models_tokens[provider],
+        # "gpt-4o-ca" if "gpt-4o-ca" in models_tokens[provider] and provider == 'openai' else list(models_tokens[provider])
+    )
+
+    llm_config = {
+        "provider": provider,
+        "model": model_name,
+        "streaming": False,
+    }
+    llm = get_llms(llm_config)
+    st.button("开始翻译", on_click=translate, args=(llm,))
+
+    doc_title = st.sidebar.selectbox(
+        "选择一篇文章",
+        _get_all_doc_title()
+    )
+
+show_souce_content = st.button("查看原文")
+show_markdown_content = st.button("查看Markdown")
+en_content, zh_content = _get_title_content(doc_title)
+st.write("# " + doc_title)
+if show_souce_content:
+    if show_markdown_content:
+        st.text(en_content)
+    else:
+        st.write(en_content)
+
+else:
+    if show_markdown_content:
+        st.text(en_content)
+    else:
+        st.write(zh_content)
