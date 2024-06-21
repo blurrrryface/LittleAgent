@@ -1,4 +1,4 @@
-from app.nodes.base_node import BaseNode
+from app.old_nodes.base_node import BaseNode
 
 
 class ConditionalNode(BaseNode):

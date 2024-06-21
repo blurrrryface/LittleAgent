@@ -7,31 +7,31 @@ import warnings
 from langchain_community.callbacks import get_openai_callback
 from typing import Tuple
 
-from app.nodes.base_node import BaseNode
+from app.old_nodes.base_node import BaseNode
 
 
 class BaseGraph:
     """
-    BaseGraph manages the execution flow of a graph composed of interconnected nodes.
+    BaseGraph manages the execution flow of a old_graph composed of interconnected old_nodes.
 
     Attributes:
         nodes (list): A dictionary mapping each node's name to its corresponding node instance.
-        edges (list): A dictionary representing the directed edges of the graph where each
+        edges (list): A dictionary representing the directed edges of the old_graph where each
                       key-value pair corresponds to the from-node and to-node relationship.
-        entry_point (str): The name of the entry point node from which the graph execution begins.
+        entry_point (str): The name of the entry point node from which the old_graph execution begins.
 
     Args:
-        nodes (iterable): An iterable of node instances that will be part of the graph.
+        nodes (iterable): An iterable of node instances that will be part of the old_graph.
         edges (iterable): An iterable of tuples where each tuple represents a directed edge
-                          in the graph, defined by a pair of nodes (from_node, to_node).
-        entry_point (BaseNode): The node instance that represents the entry point of the graph.
+                          in the old_graph, defined by a pair of old_nodes (from_node, to_node).
+        entry_point (BaseNode): The node instance that represents the entry point of the old_graph.
 
     Raises:
         Warning: If the entry point node is not the first node in the list.
 
     Example:
         >>> BaseGraph(
-        ...    nodes=[
+        ...    old_nodes=[
         ...        fetch_node,
         ...        parse_node,
         ...        rag_node,
@@ -55,7 +55,7 @@ class BaseGraph:
         if nodes[0].node_name != entry_point.node_name:
             # raise a warning if the entry point is not the first node in the list
             warnings.warn(
-                "Careful! The entry point node is different from the first node if the graph.")
+                "Careful! The entry point node is different from the first node if the old_graph.")
 
     def _create_edges(self, edges: list) -> dict:
         """
@@ -75,7 +75,7 @@ class BaseGraph:
 
     def execute(self, initial_state: dict) -> Tuple[dict, list]:
         """
-        Executes the graph by traversing nodes starting from the entry point. The execution
+        Executes the old_graph by traversing old_nodes starting from the entry point. The execution
         follows the edges based on the result of each node's execution and continues until
         it reaches a node with no outgoing edges.
 

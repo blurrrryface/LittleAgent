@@ -12,7 +12,7 @@ class AbstractGraph(ABC):
         self.source = source
         self.llm_model = self._create_llm(config["llm"], chat=True)
 
-        # Create the graph
+        # Create the old_graph
         self.graph = self._create_graph()
         self.final_state = None
         self.execution_info = None
@@ -33,13 +33,13 @@ class AbstractGraph(ABC):
 
     def get_state(self, key=None) -> dict:
         """""
-        Get the final state of the graph.
+        Get the final state of the old_graph.
 
         Args:
             key (str, optional): The key of the final state to retrieve.
 
         Returns:
-            dict: The final state of the graph.
+            dict: The final state of the old_graph.
         """
 
         if key is not None:
@@ -48,10 +48,10 @@ class AbstractGraph(ABC):
 
     def get_execution_info(self):
         """
-        Returns the execution information of the graph.
+        Returns the execution information of the old_graph.
 
         Returns:
-            dict: The execution information of the graph.
+            dict: The execution information of the old_graph.
         """
 
         return self.execution_info
@@ -59,13 +59,13 @@ class AbstractGraph(ABC):
     @abstractmethod
     def _create_graph(self):
         """
-        Abstract method to create a graph representation.
+        Abstract method to create a old_graph representation.
         """
         pass
 
     @abstractmethod
     def run(self) -> str:
         """
-        Abstract method to execute the graph and return the result.
+        Abstract method to execute the old_graph and return the result.
         """
         pass

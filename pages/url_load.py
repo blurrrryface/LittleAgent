@@ -9,14 +9,14 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langsmith import traceable
 
-from app.graph.learning_graph import LearningGraph
+from app.old_graph.learning_graph import LearningGraph
 from app.tools.loader.file_loader import FileLoader
 from loguru import logger
 
 from app.tools.models.model_tokens import models_tokens
 from app.tools.models.openai_embeder import OpenaiEmbeder
 from app.tools.models.select_llms import get_llms
-from app.tools.storage.paradeDB import ParadeDB
+from app.tools.storage.paradeDB import ParadeDB, get_retriever_from_env
 from dotenv import load_dotenv
 import os
 
@@ -139,11 +139,7 @@ def run_chat():
         你的回答:"""
         custom_rag_prompt = PromptTemplate.from_template(template)
 
-        db = ParadeDB(
-            connection='postgresql+psycopg://pgvector:pgvector@localhost:5432/ai_dev',
-            embedding_length=1536,
-            embedding_function=OpenaiEmbeder()
-        )
+        db = get_retriever_from_env()
         retriever = db.as_retriever(
             search_kwargs={"k": 4}
         )

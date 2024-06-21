@@ -3,6 +3,8 @@ import hashlib
 import json
 import uuid
 from typing import Type, List, Optional, Any, Iterable, Tuple
+
+
 from sqlalchemy import create_engine, MetaData, text
 import sqlalchemy
 
@@ -13,12 +15,56 @@ from sqlalchemy.orm import sessionmaker
 from loguru import logger
 
 
+
+
 class DistanceStrategy(str, enum.Enum):
     """Enumerator of the Distance strategies."""
 
     EUCLIDEAN = "l2"
     COSINE = "cosine"
     MAX_INNER_PRODUCT = "inner"
+
+
+def get_retriever_from_env():
+    import os
+    from dotenv import load_dotenv
+    from app.tools.models.openai_embeder import OpenaiEmbeder
+
+    try:
+        # 加载 .env 文件
+        load_dotenv()
+
+        # 获取环境变量
+        postgres_url = os.getenv('POSTGRES_HOST')
+        posgres_user = os.getenv('POSTGRES_USER')
+        postgres_password = os.getenv('POSTGRES_PASSWORD')
+        postgres_db = os.getenv('POSTGRES_DB')
+        postgres_port = os.getenv('POSTGRES_PORT')
+
+        # 检查是否所有必需的环境变量都已设置
+        if None in (postgres_url, posgres_user, postgres_password, postgres_db, postgres_port):
+            raise ValueError("One or more PostgreSQL environment variables are missing.")
+
+        # 构建数据库连接URL
+        postgres_url = f"postgresql+psycopg://{posgres_user}:{postgres_password}@{postgres_url}:{postgres_port}/{postgres_db}"
+
+        # 尝试创建数据库连接
+        parade_db = ParadeDB(
+            connection=postgres_url,
+            embedding_length=1536,
+            embedding_function=OpenaiEmbeder()
+        )
+
+        return parade_db
+
+    except FileNotFoundError:
+        print("Error: .env file not found.please copy the .env.example file to .env and set db attr")
+    except KeyError as e:
+        print(f"Error: Environment variable {e} is not set.")
+    except ValueError as e:
+        print(str(e))
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 
 class ParadeDB(VectorStore):
@@ -245,8 +291,12 @@ class ParadeDB(VectorStore):
             )
         """
 
-        # 使用参数化查询
-        result = self.session.execute(text(sql_query))
+        try:
+            # 使用参数化查询
+            result = self.session.execute(text(sql_query))
+        except sqlalchemy.exc.SQLAlchemyError as e:
+            print("数据库操作失败:")
+            raise
         documents = []
         for row in result:
             documents.append(

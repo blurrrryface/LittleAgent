@@ -1,8 +1,8 @@
-from app.graph.abstract_graph import AbstractGraph
-from app.graph.base_graph import BaseGraph
-from app.nodes.reader_node import ReaderNode
-from app.nodes.storage_node import StorageNode
-from app.nodes.summary_node import SummaryNode
+from app.old_graph.abstract_graph import AbstractGraph
+from app.old_graph.base_graph import BaseGraph
+from app.old_nodes.reader_node import ReaderNode
+from app.old_nodes.storage_node import StorageNode
+from app.old_nodes.summary_node import SummaryNode
 
 
 class SmartScraperGraph(AbstractGraph):

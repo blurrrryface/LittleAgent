@@ -5,7 +5,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 
-from app.nodes.base_node import BaseNode
+from app.old_nodes.base_node import BaseNode
 
 
 class SummaryNode(BaseNode):

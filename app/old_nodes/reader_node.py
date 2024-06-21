@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from app.tools.loader.reader_loader import ReaderLoader
-from app.nodes.base_node import BaseNode
+from app.old_nodes.base_node import BaseNode
 
 
 class ReaderNode(BaseNode):

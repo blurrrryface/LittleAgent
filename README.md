@@ -30,3 +30,63 @@ https://platform.deepseek.com/usage
 
 ## 数据存储
 https://docs.paradedb.com/search/quickstart#expected-response
+
+
+```shell
+python = "^3.10"
+loguru = "^0.7.2"
+tqdm = "^4.66.4"
+langchain-openai = "^0.1.7"
+langchain-postgres = "^0.0.6"
+psycopg2-binary = "^2.9.9"
+streamlit = "^1.34.0"
+streamlit-extras = "^0.4.2"
+websocket-client = "^1.8.0"
+numexpr = "^2.10.0"
+langchainhub = "^0.1.16"
+nbconvert = "^7.16.4"
+python-dotenv = "^1.0.1"
+sqlglot = "^25.1.0"
+langgraph = "^0.0.69"
+langchain = "^0.2.5"
+```
+
+```shell
+python = "^3.10"
+loguru = "^0.7.2"
+tqdm = "^4.66.4"
+langchain-openai = "^0.1.7"
+psycopg2-binary = "^2.9.9"
+streamlit = "^1.34.0"
+streamlit-extras = "^0.4.2"
+websocket-client = "^1.8.0"
+numexpr = "^2.10.0"
+langchainhub = "^0.1.16"
+nbconvert = "^7.16.4"
+python-dotenv = "^1.0.1"
+sqlglot = "^25.1.0"
+langgraph = "^0.0.69"
+langchain = "^0.2.5"
+langchain-community = "^0.2.5"
+jupyter = "^1.0.0"
+tavily-python = "^0.3.3"
+langchain-postgres = "^0.0.7"
+```
+
+```shell
+python = "^3.10"
+loguru = "^0.7.2"
+langchain = "^0.1.19"
+tqdm = "^4.66.4"
+langchain-openai = "^0.1.7"
+langchain-postgres = "^0.0.6"
+psycopg2-binary = "^2.9.9"
+streamlit = "^1.34.0"
+streamlit-extras = "^0.4.2"
+websocket-client = "^1.8.0"
+numexpr = "^2.10.0"
+langchainhub = "^0.1.16"
+nbconvert = "^7.16.4"
+python-dotenv = "^1.0.1"
+
+```

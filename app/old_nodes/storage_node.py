@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from app.nodes.base_node import BaseNode
+from app.old_nodes.base_node import BaseNode
 from app.tools.models.openai_embeder import OpenaiEmbeder
 from app.tools.storage.paradeDB import ParadeDB
 
