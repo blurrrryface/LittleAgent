@@ -5,3 +5,4 @@ poetry.lock
 .vscode/
 
 data/
+private_README.md

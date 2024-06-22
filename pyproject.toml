@@ -25,6 +25,7 @@ langchain-community = "^0.2.5"
 jupyter = "^1.0.0"
 tavily-python = "^0.3.3"
 langchain-postgres = "^0.0.7"
+langchain-experimental = "^0.0.61"
 
 
 [build-system]
