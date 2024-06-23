@@ -4,9 +4,9 @@ Models token
 
 models_tokens = {
     "openai": {
-        "gpt-3.5-turbo-ca":4096,
-        "gpt-4o-ca":128000,
-        "gpt-3.5-turbo-0125":16385,
+        "gpt-3.5-turbo-ca": 4096,
+        "gpt-4o-ca": 128000,
+        "gpt-3.5-turbo-0125": 16385,
         # -----------------------
         #
         # "gpt-3.5-turbo": 4096,
@@ -33,6 +33,11 @@ models_tokens = {
     "deepseek": {
         "deepseek-chat": 32768,
 
+    },
+    "glm": {
+        "GLM-4-0520": 128000,
+        "GLM-4": 128000,
+        "GLM-4-AirX": 128000
     }
 
 }

@@ -5,8 +5,9 @@ from app.tools.models.select_llms import get_llms
 
 
 class StructureNode(ABC):
-    def __init__(self, llm_type: Literal["cheap", "fast", "cleaver"], **kwargs):
+    def __init__(self, llm_type: Literal["cheap", "fast", "cleaver","glm"], **kwargs):
         self.llm = self.get_llm(llm_type, kwargs)
+
 
     def get_llm(self, llm_type, kwargs):
         if llm_type == "cheap":
@@ -25,6 +26,12 @@ class StructureNode(ABC):
             return get_llms({
                 "provider": "openai",
                 "model": "gpt-4-turbo-ca",
+                **kwargs
+            })
+        elif llm_type == "glm":
+            return get_llms({
+                "provider": "glm",
+                "model": "GLM-4",
                 **kwargs
             })
         else:

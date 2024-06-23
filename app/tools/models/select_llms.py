@@ -1,6 +1,7 @@
 from langchain_core.language_models import LLM
 
 from app.tools.models.deepseek import DeepSeekChat
+from app.tools.models.glm import GLMChat
 from app.tools.models.openai_model import OpenAI
 from app.tools.models.spark_model import SparkModel
 
@@ -33,3 +34,5 @@ def get_llms(llm_config: dict) -> OpenAI | SparkModel:
         return SparkModel(llm_params)
     elif provider == "deepseek":
         return DeepSeekChat(llm_params)
+    elif provider == "glm":
+        return GLMChat(llm_params)
