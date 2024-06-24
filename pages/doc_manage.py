@@ -3,6 +3,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from loguru import logger
+from openai import BadRequestError
 
 from app.tools.models.model_tokens import models_tokens
 from app.tools.models.select_llms import get_llms
@@ -33,6 +34,69 @@ def translate_node(original_text, llm):
     )
     response = translate_chain.invoke(original_text)
     return response
+
+
+def summary_node(original_text, llm):
+    summary_prompt = PromptTemplate.from_template("""
+    你是一个专业的文档整体者，接下来你会接受到一个文章的片段，这个片段可能来自与一个项目的文档，也可能来来自于一个科普网页
+    你的任务是对这个片段的内容进行总结，比如，你可以根据链接、标题、正文内容对这个文档介绍的内容进行猜测这个文章片段的作用
+    每一个总结的长度在400~700的大小,总结的文本要要清晰的条例结构，不要过于简洁
+    总结的结果需要是中文，但是对于文章中出现的特有词汇，不要进行翻译
+    以下是文章片段：{doc_phrase}""")
+    summary_chain = (
+            summary_prompt
+            | llm
+            | StrOutputParser()
+    )
+
+    response = summary_chain.invoke({"doc_phrase":original_text})
+    return response
+
+
+def summary(llm):
+    progress_bar = st.progress(0)
+    progress_text = st.empty()
+
+    manager = KnowledgeBaseManager()
+    # 执行查询
+    get_num = """
+        SELECT count(1) as num
+        FROM document.knowledge_base 
+        where summary is null;
+        """
+
+    get_docs = """
+    SELECT id,source as title,url,document_content
+    FROM document.knowledge_base 
+    where summary is null;
+    """
+    num = manager.execute_query_one(get_num)["num"]
+    docs = manager.execute_query_all(get_docs)
+    iterator = iter(docs)
+    for i in range(num):
+        row = next(iterator)._asdict()
+
+        doc = row["document_content"]
+        title = row["title"]
+        url = row["url"]
+        id = row["id"]
+
+        text = f"""
+        文章来源：{url} \n
+        文章标题：{title} \n
+        正文：\n=====\n{doc} 
+        """
+        try:
+            summary_doc = summary_node(text, llm)
+        except BadRequestError as e:
+            logger.error(f"总结失败: {id}")
+            logger.error(e)
+            continue
+        manager.update_by_id(id, summary=summary_doc)
+        logger.info(f"总结完成: {id}")
+        # 更新进度条的值
+        progress_bar.progress((i + 1) / num)
+        progress_text.text(f"进度: {int((i + 1) / num * 100)}%")
 
 
 def translate(llm):
@@ -150,6 +214,7 @@ with st.sidebar:
     }
     llm = get_llms(llm_config)
     st.button("开始翻译", on_click=translate, args=(llm,))
+    st.button("开始总结", on_click=summary, args=(llm,))
 
     doc_title = st.sidebar.selectbox(
         "选择一篇文章",

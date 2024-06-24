@@ -49,3 +49,7 @@ if __name__ == '__main__':
         "response_format": {"type": "json_object"}
     }
     llm = get_llms(llm_config_cleaver)
+
+    """
+    你是一个论文撰写者，你的任务是从文献中摘抄出和主题相关的内容，保持文章的精简，但又不要丢失任何和主题有关的内容，并用中文进行回答
+    """

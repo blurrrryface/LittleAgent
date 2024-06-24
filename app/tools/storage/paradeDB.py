@@ -278,6 +278,7 @@ class ParadeDB(VectorStore):
                 ,t1.doc_id
                 ,t1.url
                 ,t1.source
+                ,t1.summary
             from document.knowledge_base t1
             where t1.id in (
                 SELECT id
@@ -301,5 +302,5 @@ class ParadeDB(VectorStore):
         for row in result:
             documents.append(
                 Document(page_content=row.document_content,
-                         metadata={'doc_id': row.doc_id, 'url': row.url, 'source': row.source}))
+                         metadata={'doc_id': row.doc_id, 'url': row.url, 'source': row.source,'summary': row.summary}))
         return documents

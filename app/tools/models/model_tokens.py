@@ -10,7 +10,7 @@ models_tokens = {
         # -----------------------
         #
         # "gpt-3.5-turbo": 4096,
-        # "gpt-3.5-turbo-1106": 16385,
+        "gpt-3.5-turbo-16k-0613": 16385,
         # "gpt-3.5-turbo-instruct": 4096,
         # "gpt-4-0125-preview": 128000,
         # "gpt-4-turbo-preview": 128000,
