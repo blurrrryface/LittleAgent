@@ -21,7 +21,7 @@ def get_llms(llm_config: dict) -> OpenAI | SparkModel:
 
     """
     llm_defaults = {
-        "temperature": 0.6,
+        "temperature": 0.2,
         "streaming": False
     }
     provider = llm_config["provider"]
@@ -36,3 +36,18 @@ def get_llms(llm_config: dict) -> OpenAI | SparkModel:
         return DeepSeekChat(llm_params)
     elif provider == "glm":
         return GLMChat(llm_params)
+
+
+def get_llm_by_name(llm_name: str,streaming:bool=False) :
+    if llm_name == "gpt4o":
+        return get_llms({
+            "provider": "openai",
+            "model": "gpt-4o-ca",
+            "streaming": streaming
+        })
+    elif llm_name == "glm4v":
+        return get_llms({
+            "provider": "glm",
+            "model": "glm-4v",
+            "streaming": streaming
+        })
